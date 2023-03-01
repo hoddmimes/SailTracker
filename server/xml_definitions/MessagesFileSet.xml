@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MessageFiles>
+    <MessageFactory outPath="./src/main/java/com/hoddmimes/sailtracker/generated/messages/" package="com.hoddmimes.sailtracker.generated.messages"/>
+    <MessageFile file="./xml_definitions/Messages.xml" outPath="./src/main/java/com/hoddmimes/sailtracker/generated/messages/" package="com.hoddmimes.sailtracker.generated.messages"/>
+</MessageFiles>

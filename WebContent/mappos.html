@@ -1,0 +1,71 @@
+<html>
+<head>
+    <script src="js/config.js" type="text/javascript"></script>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script src="js/sailtracker.js" type="text/javascript"></script>
+    <script src="js/map.js" type="text/javascript"></script>
+
+    <title>SailTracker Positions</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="stylesheet" type="text/css" href="css/sailtracker.css">
+
+    <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+    <meta name="description" contents="Turf Game Heat Map">
+    <meta name="keywords" contents="TurfGame Turf game GPS outdoor Heat Map">
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+   </style>
+</head>
+
+<body onload="loadDataFromServer()"/>
+<div class="center">
+    <div id="map"></div>
+</div>
+
+<Script>
+    if (!isAuthorized()) {
+       loadUrl('/sailtracker/notloggedin.html');
+    } else {
+       mapboxgl.accessToken = mapbox_key;
+   }
+    function loadDataFromServer() {
+        var rqst = {PositionsForMapRqst : {}};
+
+        let tMongoDbPosId = getParameterByName("positionId");
+        if (tMongoDbPosId != null) {
+           rqst.PositionsForMapRqst.positionId = tMongoDbPosId;
+        }
+
+        var posting = $.ajax( { url:'/sailtracker/app/getmappositions', type:'POST', data : JSON.stringify(rqst),  contentType : 'application/json; charset=iso-8859-1'});
+
+        posting.fail(function (jqXHR, status, err) {
+          stError(jqXHR, status);
+        });
+
+
+
+        posting.done(function( msg ) {
+          if (!msg.PositionsForMapRsp.success) {
+            alert( msg.PositionsForMapRsp.reason );
+            return;
+          }
+
+          loadMap( msg.PositionsForMapRsp, 12 );
+        });  // Done
+	}
+
+
+
+</Script>
+
+</body>
+</html>

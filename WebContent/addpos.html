@@ -1,0 +1,108 @@
+<html>
+<head>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script src="js/sailtracker.js" type="text/javascript"></script>
+
+    <title>SailTracker Add Position</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="stylesheet" type="text/css" href="css/sailtracker.css">
+</head>
+<body style="background-color:#d1d1e0">
+<div  style="border:2px solid black; width:80%; margin-top: 50px;background-color:#f2f2f2" class="center">
+    <div style="margin-top: 10px; border:1px solid green; width:80%; margin-bottom:30px;" class="center" w3-include-html="/sailtracker/header.html"></div>
+
+    <div class="center">
+         <p style="text-align: center; font-family:Arial, Helvetica, sans-serif; color:gray;">
+            <b>Add Position</b>
+         </p>
+    </div>
+    <table class="tableStyle" style="background-color:white; margin-top: 40px; padding-bottom:20px; padding-top:20px;">
+        <tr>
+            <td>Time</td>
+            <td>
+                <input class="txtin" id="time" type="text" placeholder="yyyy-mm-dd hh:mm" name="time" required>
+            </td>
+        </tr>
+        <tr>
+            <td>Latitude</td>
+            <td>
+                <input class="txtin" id="latitude" type="text" placeholder="dd.sssss | D° M' S&quot; [N,S,W,E]" name="latitude" required>
+            </td>
+        </tr>
+        <tr>
+            <td>Longitude</td>
+            <td>
+                <input class="txtin" id="longitude" type="text" placeholder="dd.sssss | D° M' S&quot;  [N,S,W,E]" name="longitude" required>
+            </td>
+        </tr>
+    </table>
+
+    <div style="margin-top: 30px; width:80%; margin-bottom:30px;" class="center" >
+        <p style="text-align:center;  margin: 5px 5px 5px 5px;">
+            <button class="deleteButton" type="button" onclick="addPosition()">Add Position</button>
+        </p>
+    </div>
+
+</div>
+
+
+
+
+<Script>
+    if (!isAuthorized()) {
+       loadUrl('/sailtracker/notloggedin.html');
+    } else {
+        includeHTML();
+    }
+    function addPosition() {
+        if (isEmpty($('#time').val())) {
+            alert("Time must not be empty!");
+            return;
+        }
+
+        if (!isDateTime($('#time').val())) {
+            alert("Not a valid time field!");
+            return;
+        }
+
+        if (isEmpty($('#latitude').val())) {
+            alert("Latitude must not be empty!");
+            return;
+        }
+
+        if (isEmpty($('#longitude').val())) {
+            alert("Longitude must not be empty!");
+            return;
+        }
+
+        var rqst = {AddPositionRqst : {
+                        "time" : $('#time').val(),
+		                "latitude" : $('#latitude').val(),
+		                "longitude" : $('#longitude').val() }}
+
+		 var posting = $.ajax( { url:'/sailtracker/app/addposition', type:'POST', data : JSON.stringify(rqst),  contentType : 'application/json; charset=utf-8'});
+
+         posting.fail(function (jqXHR, status, err) {
+            stError(jqXHR, status);
+         });
+
+         posting.done(function( msg ) {
+            if (!checkAuth( msg )) {
+              return;
+            }
+
+	        if (!(msg.Response.success)) {
+    	        alert('Add position failure, reason: ' + msg.Response.reason);
+	        } else {
+	            alert('Position Added');
+		    }
+	      });
+
+    }
+</Script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<html>
+<head>
+    <meta name="description" content="Share your sailing position with loved ones" />
+    <meta name="keyworks" contents="sailing position map latitude longitude"/>
+
+    <link rel="stylesheet" href="css/sailtracker.css">
+</head>
+<body style="background-color:#d1d1e0">
+    <div  style="border:2px solid black; width:80%; margin-top: 50px;background-color:#f2f2f2" class="center">
+    <img src="images/sailboat.png" alt="sailboat" width="16%" height="16%" class="center" style="margin-top:40px; margin-bottom:40px;">
+    <h1 style="text-align: center;">SailTracker</h1>
+        <p>
+        <i><b>SailTracker</b></i> is primarily a solution for sailors who are planning long distance sailings and who want to share their position with loved ones.
+        The sailing track is plotted and shared on a map. The map could and is typically included on a home page for the sailor/boat. A plotted map example could be found for
+        <a href="https://hoddmimes.com/sailtracker/map.html?mmsi=265633260"><i>Matilda Sailing</i></a>.
+        </p>
+    <h2>How Does It Work?</h2>
+        <p>
+            Most boats doing distance sailing are equipped with <a href="https://en.wikipedia.org/wiki/Automatic_identification_system">AIS transponder</a>,
+            SailTracker will periodically scrap and record the boat positions from sites receiving and showing the boat AIS transmitted position update.
+        </p>
+        <p>
+            In order to have a map setup for a boat, the boat needs to be registered. When registered the boat AIS identification
+            <a href="https://mfame.guru/answer-how-does-the-imo-ship-identification-number-aid-ship-monitoring/">(IMO id)</a> is specified
+            together mail address, used for registration confirmation.
+        </p>
+        <p>
+            When having a registration it is possible to configure;
+            <ul style="margin-left:40px">
+                <li>how frequently positions should be collected</li>
+                <li>enable/disable collection of positions</li>
+                <li>Manually enter/remove position entries</li>
+            </ul>
+        </p>
+        <p style="text-align: center;">
+            </br>
+            <a class="astyle"  href="registration.html">Register a boat</a>
+            <a class="astyle"  style="margin-left:40px;"  href="login.html">Login</a>
+        </p>
+        </br></br>
+
+
+
+        <h2>This is a Hobby Project</h2>
+        <p>
+            This is a hobby project with no sponsering and no budget. With that comes a few restrictions.</br></br>
+
+            Sites publishing AIS position does not publish all positions. Only position received by land based (AIS) receivers
+            are publicly available. Positions received via satellites are not revealed unless having a paid subscription (~ 1000€/year).
+            Currently the solution does not have a subscription and can therefor not collect boat AIS positions being reported via satellites.
+            This typically becomes a problem when sailing over open waters where land based AIS received can not receive the AIS signal or when
+            sailing in waters where there few AIS land based receivers.
+
+        </p>
+        <p>
+            However there are mitigation to circumvent this limitation;
+            <ul style="margin-left:40px">
+                <li>There is a web interface for inputting positions manually. This however require that you in someway
+                    note positions when sailing out of reach When coming to a port with Internet the positions can be post entered. </li>
+                <li>Many boats are equipped satellite phones having  builtin capability to send a mail with current position. Such mail can be
+                sent to a special ShipTracking mail address. SailTracking will parse such mail a register the position for the boat.
+                    <i>This functionality is currently not available, missing example data. </i></li>
+                <li>An IOS App has been developed (but not yet deployed), the App can record positions which can be uploaded to SailTracking
+                when coming to a harbour with Internet.</li>
+            </ul>
+        </p>
+
+        <p style="text-align: center;">
+        <br><br>
+        <a href="mailto:par.bertilsson@yahoo.com"><b><i>Any questions? Send a mail</b><i></a>
+        </p>
+    </div>
+
+</body>
+</html>

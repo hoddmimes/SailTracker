@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.hoddmimes.sailtracker'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    providedCompile project(':server')
+    providedCompile group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
+
+
+    //providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-logging-juli', version: '8.5.2'
+    providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '10.1.5'
+    providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '10.1.5'
+    providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: '10.1.5'
+    providedCompile group: 'org.apache.tomcat', name: 'tomcat-annotations-api', version: '10.1.5'
+
+    implementation group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '3.1.1'
+    implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '3.1.1'
+    implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '3.1.1'
+    implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '3.1.1'
+    providedCompile group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}

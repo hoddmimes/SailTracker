@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MessageFiles>
+    <MessageFactory outPath="./src/main/java/com/hoddmimes/sailtracker/generated/dbobjects/" package="com.hoddmimes.sailtracker.generated.dbobjects"/>
+    <MongoAux outPath="./src/main/java/com/hoddmimes/sailtracker/generated/" package="com.hoddmimes.sailtracker.generated"/>
+    <MessageFile file="./xml_definitions/DBObjects.xml" outPath="./src/main/java/com/hoddmimes/sailtracker/generated/dbobjects/" package="com.hoddmimes.sailtracker.generated.dbobjects"/>
+</MessageFiles>

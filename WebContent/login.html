@@ -1,0 +1,98 @@
+<html>
+<head>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script src="js/sailtracker.js" type="text/javascript"></script>
+
+    <title>SailTracker Logon </title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="stylesheet" type="text/css" href="css/sailtracker.css">
+</head>
+<body style="background-color:#d1d1e0">
+<br><br>
+<div  style="border:2px solid black; width:80%; margin-top: 50px;background-color:#f2f2f2" class="center">
+    <img src="images/sailboat.png" alt="sailboat" width="16%" height="16%" class="center" style="margin-top:40px; margin-bottom:40px;">
+    <h1 style="text-align:center;">Sail Tracker Sign On</h1>
+<br>
+
+<form style="text-align:center" id="signon" action="/sailtracker/app/signon">
+    <table border="0" cellpadding="5" align="center">
+        <tr>
+            <td><label class="lblprompt"  for="uname"><b>Username</b></label></td>
+            <td width="12" />
+            <td><input class="txtin" id="username" type="text" placeholder="Mail Address/MMSI" name="username" required></td>
+        </tr>
+        <tr>
+            <td><label class="lblprompt"  for="psw"><b>Password</b></label></td>
+            <td width="12" />
+            <td><input class="txtin" id="password"  type="password" placeholder="Password" name="password" required></td>
+        </tr>
+    </table>
+    <br>
+
+    <button class="signOnButton" type="submit">Sign On</button>
+</form>
+    <div  style=" text-align: center; margin-top: 60px; margin-bottom: 35px; background-color:#f2f2f2" class="center">
+        <button onclick="recoverPassword()" style="margin: auto; background-color: #d1d1e0; font-style: italic;" class="deleteButton" type="button">Forgot password?</button>
+    </div>
+</div>
+<script>
+
+/* attach a submit handler to the form */
+$("#signon").submit(function(event) {
+
+  /* stop form from submitting normally */
+  event.preventDefault();
+
+  if (isEmpty($('#username').val())) {
+    alert("Username must not be empty!");
+    return;
+  }
+
+  if (isEmpty($('#password').val())) {
+    alert("Password must not be empty!");
+    return;
+  }
+
+
+  /* get the action attribute from the <form action=""> element */
+  var $form = $( this ),
+  url = $form.attr( 'action' );
+
+
+  var rqst = {LogonRqst : {
+		            "username" : $('#username').val(),
+		            "password" : $('#password').val() }}
+
+  //console.log( 'request-data: ' + JSON.stringify(rqst));
+
+  /* Send the data using post with element id name and name2*/
+  var posting = $.ajax( { url:url, type:'POST', data : JSON.stringify(rqst),  contentType : 'application/json; charset=utf-8'});
+
+  posting.fail(function (jqXHR, status, err) {
+    stError(jqXHR, status);
+  });
+
+  /* Alerts the results */
+  posting.done(function( msg ) {
+    console.log( msg );
+
+	if (!(msg.Response.success)) {
+    	alert('Sign on failure, reason: ' + msg.Response.reason);
+	} else {
+		loadUrl( msg.Response.optionPage );
+	}
+ });
+});
+
+function recoverPassword() {
+    loadUrl("/sailtracker/recoverPassword.html");
+    return;
+}
+
+</script>
+</body>
+</html>

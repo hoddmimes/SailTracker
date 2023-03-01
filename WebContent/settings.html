@@ -1,0 +1,206 @@
+<html>
+<head>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script src="js/sailtracker.js" type="text/javascript"></script>
+
+    <title>SailTracker Settings</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="stylesheet" type="text/css" href="css/sailtracker.css">
+</head>
+<body style="background-color:#d1d1e0">
+<div  style="border:2px solid black; width:80%; margin-top: 50px;background-color:#f2f2f2" class="center">
+    <div style="margin-top: 10px; border:1px solid green; width:80%; margin-bottom:30px;" class="center" w3-include-html="/sailtracker/header.html"></div>
+
+    <div class="center">
+    <form class="settings" autocomplete="off">
+        <label for="mmsi">MMSI:</label><br>
+        <input type="text" id="mmsi" name="mmsi" class="readonlyfield" readonly><br><br>
+        <label for="isBoat">Is MMSI boat:</label><br>
+        <input type="text" id="isBoat" name="isBoat" class="readonlyfield" readonly><br><br>
+        <label for="mailaddr">Mail address:</label><br>
+        <input type="text" id="mailaddr" name="mailaddr" class="inputfield"><br><br>
+        <label for="lastSignon">Last login:</label><br>
+        <input type="text" id="lastSignon" name="lastSignon" class="readonlyfield" readonly><br><br>
+        <label for="positions">Position registered:</label><br>
+        <input type="text" id="positions" name="positions" class="readonlyfield" readonly><br><br>
+        <label for="password">Password:</label><br>
+        <input type="password" autocomplete="new-password" id="password" name="password" class="inputfield"><br><br>
+        <label id="intervallbl" for="interval">AIS collect interval (hours):</label><br>
+        <input type="text" id="interval" name="interval" class="inputfield"><br><br>
+
+        <div style="display:flex; flex-direction: row; justify-content: left; align-items: center"><br><br>
+            <label id="collectinglbl" for="collecting">AIS auto collect:</label>
+            <label id="sliderlbl" class="switch" style="margin-left:20px;">
+                <input type="checkbox" name="collecting" id="collecting">
+                <span class="slider round"></span>
+            </label><br><br>
+        </div><br><br>
+
+        <div style="margin-top: 30px; width:80%; margin-bottom:30px;" class="center" >
+            <p style="text-align:center;  margin: 5px 5px 5px 5px;">
+                <button class="deleteButton" type="button" onclick="deleteAccount()">Delete Account</button>
+                <button class="deleteButton" type="button" onclick="saveAccount()">Save</button>
+            </p>
+        </div>
+
+    </form>
+    </div>
+
+
+
+</div>
+<Script>
+    includeHTML()
+    if (!isAuthorized()) {
+       loadUrl('/sailtracker/notloggedin.html');
+    } else {
+
+    var isBoat;
+
+    // Load user properties
+
+    /* Send the data using post with element id name and name2*/
+    var posting = $.ajax( { url:"/sailtracker/app/restricted/getsettings", type:'GET', contentType : 'application/json; charset=utf-8'});
+
+    posting.fail(function (jqXHR, status, err) {
+       stError(jqXHR, status);
+    });
+
+    /* Alerts the results */
+    posting.done(function( msg ) {
+        if (!checkAuth( msg )) {
+          return;
+        }
+
+        let settings = msg.SettingsRsp.settings;
+
+        isBoat = settings.isBoat;
+
+        document.getElementById("mmsi").value = settings.MMSI;
+        document.getElementById("isBoat").value = settings.isBoat;
+        document.getElementById("password").value = settings.password;
+        document.getElementById("mailaddr").value = settings.mailAddress;
+        document.getElementById("lastSignon").value = settings.lastLogin;
+        document.getElementById("positions").value = settings.positionCount;
+        document.getElementById("interval").value = settings.collectInterval;
+        document.getElementById("collecting").checked = settings.autoCollect;
+
+
+
+
+
+
+        if (!isBoat) {
+          var element = document.getElementById("interval");
+          element.parentNode.removeChild(element);
+
+           var element = document.getElementById("intervallbl");
+          element.parentNode.removeChild(element);
+
+          var element = document.getElementById("sliderlbl");
+          element.parentNode.removeChild(element);
+
+          var element = document.getElementById("collectinglbl");
+          element.parentNode.removeChild(element);
+        }
+
+
+    }); //
+    }
+
+    function deleteAccount() {
+       let text = "Do you really want to delete the account and remove all its positions?\nCancel or Yes.";
+       if (confirm(text) == true) {
+            var posting = $.ajax( { url:"/sailtracker/app/restricted/deleteAccount", type:'DELETE', contentType : 'application/json; charset=utf-8'});
+            posting.fail(function (jqXHR, status, err) {
+                stError(jqXHR, status);
+            }); // Fail
+
+            /* Alerts the results */
+            posting.done(function( msg ) {
+                console.log( msg );
+                alert( msg.Response.reason );
+                loadUrl( msg.Response.optionPage );
+            }); // Done
+       }
+       return;
+    }
+
+    function saveAccount() {
+        var rqst;
+
+       // check mail
+       console.log("save account");
+
+        if (isEmpty($('#mailaddr').val())) {
+            alert("Mail address must not be empty!");
+            return;
+        }
+
+        if (!validateEmail($('#mailaddr').val())) {
+            alert("Not an valid mail address!");
+            return;
+        }
+
+        if (isEmpty($('#password').val())) {
+            alert("Password must not be empty!");
+            return;
+        }
+
+        if ($('#password').val().length < 6) {
+            alert("Password must at least be 6 character!");
+            return;
+        }
+
+        if (isBoat) {
+            if (!isNumeric($('#interval').val())) {
+                alert("Interval must be numeric");
+                return;
+            }
+            let interval = document.getElementById("interval").value;
+            if (interval < 0) {
+                alert("Interval must not be negative");
+                return;
+            }
+
+             rqst  = {UpdateSettingsRqst : {settings :{
+                            "MMSI" : $('#mmsi').val(),
+		                    "mailAddress" : $('#mailaddr').val(),
+		                    "password" : $('#password').val(),
+		                    "collectInterval" : $('#interval').val() }}}
+		     if ($('#collecting').val() === 'on') {
+		        rqst.UpdateSettingsRqst.settings.autoCollect = true;
+		     } else {
+		        rqst.UpdateSettingsRqst.settings.autoCollect = false;
+		     }
+       } else {
+           rqst  = {UpdateSettingsRqst : { settings : {
+                            "MMSI" : $('#mmsi').val(),
+		                    "mailAddress" : $('#mailaddr').val(),
+		                    "password" : $('#password').val() }}}
+	     }
+
+          console.log( rqst )
+          var posting = $.ajax( { url:'/sailtracker/app/restricted/updatesettings', type:'POST', data : JSON.stringify(rqst),  contentType : 'application/json; charset=utf-8'});
+
+          posting.fail(function (jqXHR, status, err) {
+            stError(jqXHR, status);
+          });
+
+          posting.done(function( msg ) {
+            console.log( msg );
+
+	        if (!(msg.Response.success)) {
+    	        alert('Update failure, reason: ' + msg.Response.reason);
+	        } else {
+	            alert('Account Successfully Updated');
+		    }
+	      });
+    }
+</Script>
+</body>
+</html>

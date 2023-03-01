@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Messages mongoSupport="true">
+
+    <Message name="User" rootMessage="true" db="true" dbCollection="User">
+        <Attribute name="mailAddr" type="String"/>
+        <Attribute name="MMSI" type="String" dbKey="unique"/>
+        <Attribute name="isBoatMMSI" type="boolean"/>
+        <Attribute name="password" type="String"/>
+        <Attribute name="salt" type="String"/>
+        <Attribute name="loginTime" type="String"/>
+        <Attribute name="lastLogin" type="String"/>
+        <Attribute name="loginCounts" type="int" />
+        <Attribute name="collecting" type="boolean" />
+        <Attribute name="collectFrequencyHH" type="int" />
+        <Attribute name="confirmed" type="boolean" />
+        <Attribute name="confirmationId" type="String" />
+        <Attribute name="shipId" type="int" />
+    </Message>
+
+    <Message name="Position" rootMessage="true" db="true" dbCollection="Position">
+        <Attribute name="time" type="String"/>
+        <Attribute name="reportTime" type="String"/>
+        <Attribute name="source" type="String"/>
+        <Attribute name="MMSI" type="String" dbKey="notunique"/>
+        <Attribute name="lat" type="double"/>
+        <Attribute name="long" type="double"/>
+    </Message>
+</Messages>

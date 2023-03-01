@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Messages mongoSupport="false">
+
+    <Imports>
+        <Import path="com.hoddmimes.sailtracker.generated.dbobjects.Position"/>
+    </Imports>
+
+
+    <Message name="LogonRqst" rootMessage="true">
+        <Attribute name="username" type="String"/>
+        <Attribute name="password" type="String"/>
+    </Message>
+
+
+    <Message name="Response" rootMessage="true">
+        <Attribute name="success" type="boolean"/>
+        <Attribute name="reason" type="String"/>
+        <Attribute name="optionPage" type="String"/>
+    </Message>
+
+
+    <Message name="RegistrationRqst"  rootMessage="true">
+        <Attribute name="mailAddress" type="String"/>
+        <Attribute name="password" type="String"/>
+        <Attribute name="MMSI" type="String"/>
+    </Message>
+
+    <Message name="MailConfirmation"  rootMessage="true">
+        <Attribute name="confirmationId" type="String"/>
+        <Attribute name="mailAddress" type="String"/>
+    </Message>
+
+
+
+    <Message name="UpdatePasswordRqst"  rootMessage="true">
+        <Attribute name="mailAddress" type="String"/>
+        <Attribute name="password" type="String"/>
+        <Attribute name="confirmationId" type="String"/>
+    </Message>
+
+    <Message name="PositionRsp"  rootMessage="true">
+        <Attribute name="positions" type="Pos" list="array" />
+    </Message>
+
+    <Message name="Pos"  rootMessage="false">
+        <Attribute name="time" type="String"/>
+        <Attribute name="lat" type="double"/>
+        <Attribute name="long" type="double"/>
+        <Attribute name="id" type="String"/>
+
+        <code>
+            public Pos( Position pPosition ) {
+               this.mTime = pPosition.getTime().get();
+               this.mLat = pPosition.getLat().get();
+               this.mLong = pPosition.getLong().get();
+               this.mId = pPosition.getMongoId();
+            }
+        </code>
+    </Message>
+
+    <Message name="Settings"  rootMessage="false">
+        <Attribute name="MMSI" type="String"/>
+        <Attribute name="isBoat" type="boolean"/>
+        <Attribute name="mailAddress" type="String"/>
+        <Attribute name="password" type="String"/>
+        <Attribute name="lastLogin" type="String"/>
+        <Attribute name="positionCount" type="int"/>
+        <Attribute name="autoCollect" type="boolean"/>
+        <Attribute name="collectInterval" type="int"/>
+    </Message>
+
+    <Message name="SettingsRsp"  rootMessage="true">
+        <Attribute name="settings" type="Settings"/>
+    </Message>
+
+    <Message name="UpdateSettingsRqst"  rootMessage="true">
+        <Attribute name="settings" type="Settings"/>
+    </Message>
+
+    <Message name="AddPositionRqst"  rootMessage="true">
+        <Attribute name="time" type="String"/>
+        <Attribute name="latitude" type="String"/>
+        <Attribute name="longitude" type="String"/>
+    </Message>
+
+    <Message name="SummaryRsp"  rootMessage="true">
+
+        <Attribute name="totalUsers" type="int"/>
+        <Attribute name="totalPositions" type="int"/>
+        <Attribute name="totalFirstEver" type="String"/>
+        <Attribute name="MMSI" type="String"/>
+        <Attribute name="mmsiLastLogin" type="String"/>
+        <Attribute name="mmsiPositions" type="int"/>
+        <Attribute name="mmsiFirstPos" type="Pos"/>
+        <Attribute name="mmsiLastPos" type="Pos"/>
+    </Message>
+
+    <Message name="DeleteSelectedRqst"  rootMessage="true">
+        <Attribute name="positions" type="Pos"  list="array"/>
+    </Message>
+
+    <Message name="PositionsForMapRqst"  rootMessage="true">
+        <Attribute name="positionId" type="String"/>
+        <Attribute name="mmsiId" type="String"/>
+    </Message>
+
+    <Message name="PositionsForMapRsp"  rootMessage="true">
+        <Attribute name="success" type="boolean"/>
+        <Attribute name="reason" type="String"/>
+        <!-- Messy structure check the code i.e. server, services, ZoneDensityService -->
+    </Message>
+
+    <Message name="RecoverPasswordRqst"  rootMessage="true">
+        <Attribute name="mailAddress" type="String"/>
+    </Message>
+
+
+
+</Messages>
