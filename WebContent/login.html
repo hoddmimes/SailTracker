@@ -16,17 +16,19 @@
 <div  style="border:2px solid black; width:80%; margin-top: 50px;background-color:#f2f2f2" class="center">
     <img src="images/sailboat.png" alt="sailboat" width="16%" height="16%" class="center" style="margin-top:40px; margin-bottom:40px;">
     <h1 style="text-align:center;">Sail Tracker Sign On</h1>
-<br>
 
+    <p style="text-align: center; font-size: 14px; font-style: italic;" id="versionText">
+    </p>
+<br><br>
 <form style="text-align:center" id="signon" action="/sailtracker/app/signon">
     <table border="0" cellpadding="5" align="center">
         <tr>
-            <td><label class="lblprompt"  for="uname"><b>Username</b></label></td>
+            <td><label class="lblprompt"  for="username"><b>Username</b></label></td>
             <td width="12" />
             <td><input class="txtin" id="username" type="text" placeholder="Mail Address/MMSI" name="username" required></td>
         </tr>
         <tr>
-            <td><label class="lblprompt"  for="psw"><b>Password</b></label></td>
+            <td><label class="lblprompt"  for="password"><b>Password</b></label></td>
             <td width="12" />
             <td><input class="txtin" id="password"  type="password" placeholder="Password" name="password" required></td>
         </tr>
@@ -40,6 +42,20 @@
     </div>
 </div>
 <script>
+
+        var posting = $.ajax( { url:"/sailtracker/app/version", type:'GET', contentType : 'application/json; charset=utf-8'});
+
+        posting.fail(function (jqXHR, status, err) {
+            stError(jqXHR, status);
+        });
+
+        /* Alerts the results */
+        posting.done(function( msg ) {
+            let version = msg.Version;
+            versionTxt = document.getElementById("versionText");
+            //versionTxt.innerHTML = 'Version ' + version.major + "." + version.minor;
+            versionTxt.innerHTML = version.buildDate.substring(0,16) + " (" + version.major + "." + version.minor + ")";
+        }); // Done
 
 /* attach a submit handler to the form */
 $("#signon").submit(function(event) {

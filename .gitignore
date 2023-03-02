@@ -1,3 +1,8 @@
+/server/build/
+build/
+/server/src/main/java/com/hoddmimes/sailtracker/generated/
+
+
 # Compiled class file
 *.class
 
