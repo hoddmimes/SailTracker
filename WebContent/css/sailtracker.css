@@ -61,11 +61,10 @@ textarea {
 }
 
 button {
-    margin-top:24px;
     font-weight: bold;
-    font-size: 20px;
-    padding: 5px 10px 5px 10px;
-    background-color: blue;
+    font-size: 14px;
+    padding: 5px 20px 5px 20px;
+    background-color: gray;
     color: white;
     border-radius:8px;
 }
@@ -78,8 +77,8 @@ button {
 .navigationButton {
     margin-top:0px;
     font-weight: bold;
-    font-size: 14px;
-    padding: 5px 10px 5px 10px;
+    font-size: 16px;
+    padding: 5px 12px 5px 12px;
     background-color: black;
     color: white;
     border-radius:8px;
@@ -92,25 +91,7 @@ button {
     text-decoration: underline;
 }
 
-.deleteButton {
-    margin-top:0px;
-    font-weight: bold;
-    font-size: 12px;
-    padding: 5px 10px 5px 10px;
-    background-color: gray;
-    color: white;
-    border-radius:8px;
-}
 
-.signOnButton {
-    margin-top:0px;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 5px 20px 5px 20px;
-    background-color: black;
-    color: white;
-    border-radius:8px;
-}
 
 .readonlyfield {
     font-style: italic;

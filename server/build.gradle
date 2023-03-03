@@ -10,10 +10,15 @@ def versionFile = "${project.projectDir}/src/main/java/com/hoddmimes/sailtracker
 group 'com.hoddmimes.sailtracker'
 version '1.0'
 
-task createVersion() {
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(15)
+    }
+}
 
-    println  "  rootDir:      ${project.rootDir}"
-    println  "  projectDir:   ${project.projectDir}";
+tasks.register('createVersion') {
+    //println  "  rootDir:      ${project.rootDir}"
+    //println  "  projectDir:   ${project.projectDir}";
 
         // Load version data
         def jVrsFile = file( jsonVersionFile )
@@ -42,12 +47,10 @@ task createVersion() {
         fh << "    public static final String build = \" version: " + jVersion.major + "." + jVersion.minor + " built: \" + buildDate;\n"
         fh << "}\n"
 
-        println "***** Create new Version file\n"
-
     doLast {
         if (jVrsFile.delete()) {
             jVrsFile.delete()
-            print "***** Deleting json version file\n"
+            println "***** Deleting json version file"
         }
 
         jVersion.minor = jVersion.minor + 1
@@ -60,7 +63,7 @@ task createVersion() {
         jfh << "     \"minor\" : " + jVersion.minor + "\n"
         jfh << "}\n\n"
 
-        println "***** Create new Json Version file\n"
+        println "***** Create new Version fil"
     }
 }
 
@@ -70,7 +73,7 @@ task  renameWar(  type: Copy ) {
     destinationDir file('./')
     rename 'sailtracker-1.0.war', "sailtracker.war"
     doLast {
-        println('That is all folks!')
+        println('**** Renamed WAR file')
     }
 }
 task(generateDBObjects, type: JavaExec ) {
@@ -78,9 +81,10 @@ task(generateDBObjects, type: JavaExec ) {
     classpath = files('./libs/pojojson-generate-1.1.jar')
     args  '-xml', './xml_definitions/DBObjectsFileSet.xml'
     doLast {
-        println "Generated SailTracker Objects"
+        println "***** Generated SailTracker Objects"
     }
 }
+
 task deleteGeneratedFiles(type: Delete) {
     delete fileTree('src/main/java/com/hoddmimes/sailtracker/generated') {
         include '*.java'
@@ -101,7 +105,7 @@ task deleteGeneratedFiles(type: Delete) {
         include 'sailtracker.war'
     }
     doLast {
-        println "Cleaned Generated Files"
+        println "***** Cleaned Generated Files"
     }
 }
 
@@ -111,14 +115,30 @@ task(generateMessages, type: JavaExec ) {
     classpath = files('./libs/pojojson-generate-1.1.jar')
     args  '-xml', './xml_definitions/MessagesFileSet.xml'
     doLast {
-        println "Generated Java SailTracker Messages"
+        println "***** Generated Java SailTracker Messages"
     }
 }
 
-task copyToHoddmimes() {
+
+
+
+tasks.register('generateCode') {
+    doFirst {
+        deleteGeneratedFiles
+    }
+    dependsOn( createVersion )
+    dependsOn( generateMessages )
+    dependsOn( generateDBObjects )
+
+    doLast {
+        println "***** SailTracker message/objects generated"
+    }
+}
+
+tasks.register('copyToHoddmimes') {
     doLast {
         ant.scp( file : "./sailtracker.war", trust : 'yes', keyfile : '${user.home}/.ssh/id_rsa', port : 11721,  todir : "bertilsson@www.hoddmimes.com:")
-        println("Copy Production")
+        println("***** Copy War to production")
     }
 }
 
@@ -135,23 +155,11 @@ war {
 }
 
 
-
 repositories {
     mavenCentral()
 }
 
-
-compileJava.dependsOn( generateMessages )
-compileJava.dependsOn( generateDBObjects )
-
-build.dependsOn( deleteGeneratedFiles )
-clean.dependsOn(deleteGeneratedFiles)
-
-
-
-
-
-
+compileJava.dependsOn( generateCode )
 
 build.finalizedBy(renameWar)
 build.finalizedBy(copyToHoddmimes)
