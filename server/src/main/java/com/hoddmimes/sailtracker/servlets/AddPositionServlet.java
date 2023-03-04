@@ -39,6 +39,14 @@ public class AddPositionServlet {
             return StatusAux.create(false, e.getMessage()).toJson().toString();
         }
 
+        // Check Latitude
+        if ((tLat < -90.0d) || (tLat > 90.0d)) {
+            return StatusAux.create(false, "Latitude value out of range").toJson().toString();
+        }
+        if ((tLong < -180.0d) || (tLong > 180.0d)) {
+            return StatusAux.create(false, "Longitude value out of range").toJson().toString();
+        }
+
         Position tPosition = new Position();
         tPosition.setLat(tLat);
         tPosition.setLong(tLong);
