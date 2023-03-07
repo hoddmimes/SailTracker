@@ -1,10 +1,7 @@
 package com.hoddmimes.sailtracker.servlets;
 
 import com.google.gson.JsonObject;
-import com.hoddmimes.sailtracker.authorize.Authenticator;
 import com.hoddmimes.sailtracker.generated.Version;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
