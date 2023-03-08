@@ -6,11 +6,10 @@ buildscript {
 plugins {
     id 'java'
     id 'war'
+    id 'org.hidetake.ssh' version '2.11.2'
 }
 
 apply plugin: 'com.hoddmimes.versionplugin'
-
-
 
 
 group 'com.hoddmimes.sailtracker'
@@ -21,6 +20,10 @@ java {
         languageVersion = JavaLanguageVersion.of(15)
     }
 }
+
+
+
+
 
 VersionTask {
     versionFile = "$project.rootDir/version.json"
@@ -79,6 +82,27 @@ task deleteGeneratedFiles(type: Delete) {
     }
 }
 
+remotes {
+    hoddmimes {
+        host = 'www.hoddmimes.com'
+        user = 'bertilsson'
+        port = 11721
+        identity = file( System.getProperty("user.home") + '/.ssh/id_rsa')
+    }
+}
+
+tasks.register('copyToHoddmimes') {
+    doLast {
+        ssh.run {
+            session(remotes.hoddmimes) {
+                put from:   "$project.rootDir/sailtracker.war" , into: './'
+                execute 'sudo mv sailtracker.war /var/lib/tomcat/webapps/'
+            }
+        }
+        println("**** sailtracker.war copied to Hoddmimes")
+    }
+}
+
 
 task(generateMessages, type: JavaExec ) {
     main = 'JsonTransform'
@@ -104,18 +128,6 @@ tasks.register('generateCode') {
         println "***** SailTracker message/objects generated"
     }
 }
-
-tasks.register('copyToHoddmimes') {
-    doLast {
-        ant.scp( file : "./sailtracker.war", trust : 'yes', keyfile : '${user.home}/.ssh/id_rsa', port : 11721,  todir : "bertilsson@www.hoddmimes.com:")
-        println("***** Copy War to production")
-    }
-}
-
-ant.taskdef(
-        name: 'scp',
-        classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp',
-        classpath: 'libs/ant-jsch.jar:libs/jsch-0.2.7.jar')
 
 war.archiveBaseName='sailtracker'
 project.webAppDirName = 'WebContent'
